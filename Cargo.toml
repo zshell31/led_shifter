@@ -1,0 +1,10 @@
+[package]
+name = "led_shifter"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+derive-where = "1.2.5"
+ferrum = { git = "ssh://git@github.com/zshell31/ferrum" }
