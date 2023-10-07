@@ -50,7 +50,7 @@ where
     UsizeConstr<{ counter(N) }>:,
 {
     pub fn new() -> Self {
-        Self(0.into())
+        Self(0_u8.into())
     }
 
     pub fn is_max(&self) -> bool {
@@ -63,7 +63,7 @@ where
 
     pub fn succ(self) -> (Self, Bit) {
         let (value, bit) = if self.is_max() {
-            (0.into(), H)
+            (0_u8.into(), H)
         } else {
             (self.0 + 1, L)
         };

@@ -11,31 +11,32 @@ module top_module
     output wire led_3
 );
 
-    wire rst;
-    assign rst = 0;
-
-    wire led;
-    wire led_1;
-    wire led_2;
-    wire led_3;
+    wire __tmp_3;
+    wire __tmp_4;
+    wire __tmp_5;
+    wire __tmp_6;
     leds __leds (
         // Inputs
         .clk(clk),
-        .rst(rst),
+        .rst(1'd0),
         // Outputs
-        .__out(led),
-        .__out_1(led_1),
-        .__out_2(led_2),
-        .__out_3(led_3)
+        .__out(__tmp_3),
+        .__out_1(__tmp_4),
+        .__out_2(__tmp_5),
+        .__out_3(__tmp_6)
     );
 
-    assign led = led;
+    wire led;
+    assign led = __tmp_3;
 
-    assign led_1 = led_1;
+    wire led_1;
+    assign led_1 = __tmp_4;
 
-    assign led_2 = led_2;
+    wire led_2;
+    assign led_2 = __tmp_5;
 
-    assign led_3 = led_3;
+    wire led_3;
+    assign led_3 = __tmp_6;
 
 endmodule
 
@@ -51,47 +52,47 @@ module leds
     output wire __out_3
 );
 
-    wire [22:0] shift_c_1;
-    wire en;
+    wire [22:0] __tmp_9;
+    wire __tmp_10;
     Counter$succ __Counter$succ (
         // Inputs
-        .self$(__tmp_22),
+        .self$(__tmp_16[1 +: 23]),
         // Outputs
-        .value(shift_c_1),
-        .bit(en)
+        .value(__tmp_9),
+        .bit(__tmp_10)
     );
 
     reg [23:0] __tmp_16;
     initial begin
         __tmp_16 = { 23'd0, 1'd0 };
     end
-    always @ (posedge clk or posedge rst) begin
+    always @(posedge clk or posedge rst) begin
         if (rst)
             __tmp_16 <= { 23'd0, 1'd0 };
         else
-            __tmp_16 <= { shift_c_1, en };
+            __tmp_16 <= { __tmp_9, __tmp_10 };
     end
 
-    wire [22:0] __tmp_22;
-    assign __tmp_22 = __tmp_16[1 +: 23];
+    wire [22:0] __tmp_17;
+    assign __tmp_17 = __tmp_16[1 +: 23];
 
-    wire en_2;
-    assign en_2 = __tmp_16[0];
+    wire __tmp_18;
+    assign __tmp_18 = __tmp_16[0];
 
-    wire [4:0] counter_1;
-    wire change;
+    wire [4:0] __tmp_32;
+    wire __tmp_33;
     Counter$succ_1 __Counter$succ_1 (
         // Inputs
-        .self$(__tmp_50),
+        .self$(__tmp_44[8 +: 5]),
         // Outputs
-        .value(counter_1),
-        .bit(change)
+        .value(__tmp_32),
+        .bit(__tmp_33)
     );
 
     wire [7:0] __tmp_36;
     State$change __State$change (
         // Inputs
-        .self$(state_2),
+        .self$(__tmp_44[0 +: 8]),
         // Outputs
         .__tmp_19(__tmp_36)
     );
@@ -99,18 +100,18 @@ module leds
     wire [7:0] __tmp_37;
     State$shift __State$shift (
         // Inputs
-        .self$(state_2),
+        .self$(__tmp_44[0 +: 8]),
         // Outputs
         .__tmp_35(__tmp_37)
     );
 
-    wire [7:0] state_1;
-    always @ (*) begin
-        case (change)
+    wire [7:0] __tmp_38;
+    always @(*) begin
+        case (__tmp_33)
             1'h0: 
-                state_1 = __tmp_37;
+                __tmp_38 = __tmp_37;
             default: 
-                state_1 = __tmp_36;
+                __tmp_38 = __tmp_36;
         endcase
     end
 
@@ -118,18 +119,12 @@ module leds
     initial begin
         __tmp_44 = { 5'd0, { 1'd0, 7'd15 } };
     end
-    always @ (posedge clk or posedge rst) begin
+    always @(posedge clk or posedge rst) begin
         if (rst)
             __tmp_44 <= { 5'd0, { 1'd0, 7'd15 } };
-        else if (en_2)
-            __tmp_44 <= { counter_1, state_1 };
+        else if (__tmp_18)
+            __tmp_44 <= { __tmp_32, __tmp_38 };
     end
-
-    wire [4:0] __tmp_50;
-    assign __tmp_50 = __tmp_44[8 +: 5];
-
-    wire [7:0] state_2;
-    assign state_2 = __tmp_44[0 +: 8];
 
     wire __out;
     wire __out_1;
@@ -137,7 +132,7 @@ module leds
     wire __out_3;
     State$to_array __State$to_array (
         // Inputs
-        .self$(state_2),
+        .self$(__tmp_44[0 +: 8]),
         // Outputs
         .__tmp_43(__out),
         .__tmp_44(__out_1),
@@ -165,7 +160,7 @@ module Counter$succ
     );
 
     wire [23:0] __tmp_15;
-    always @ (*) begin
+    always @(*) begin
         case (__tmp_1)
             1'h0: 
                 __tmp_15 = { self$ + 23'd1, 1'd0 };
@@ -213,7 +208,7 @@ module Counter$succ_1
     );
 
     wire [5:0] __tmp_15;
-    always @ (*) begin
+    always @(*) begin
         case (__tmp_1)
             1'h0: 
                 __tmp_15 = { self$ + 5'd1, 1'd0 };
@@ -273,7 +268,7 @@ module State$shift
 );
 
     wire [6:0] __tmp_11;
-    always @ (*) begin
+    always @(*) begin
         case (self$[0 +: 7] == 7'd0)
             1'h0: 
                 __tmp_11 = self$[0 +: 7] << 7'd1;
@@ -283,7 +278,7 @@ module State$shift
     end
 
     wire [6:0] __tmp_27;
-    always @ (*) begin
+    always @(*) begin
         case (self$[0 +: 7] == 7'd0)
             1'h0: 
                 __tmp_27 = self$[0 +: 7] >> 7'd1;
@@ -316,17 +311,17 @@ module State$to_array
     output wire __tmp_46
 );
 
-    wire [6:0] left;
-    assign left = self$[0 +: 7];
+    wire [6:0] __tmp_1;
+    assign __tmp_1 = self$[0 +: 7];
 
     wire [3:0] __tmp_5;
-    assign __tmp_5 = left[3 +: 4];
+    assign __tmp_5 = __tmp_1[3 +: 4];
 
-    wire [6:0] right;
-    assign right = self$[0 +: 7];
+    wire [6:0] __tmp_19;
+    assign __tmp_19 = self$[0 +: 7];
 
     wire [3:0] __tmp_23;
-    assign __tmp_23 = right[0 +: 4];
+    assign __tmp_23 = __tmp_19[0 +: 4];
 
     wire [3:0] __tmp_38;
     always @(*) begin
