@@ -6,7 +6,7 @@ pub mod state;
 use counter::{counter, Counter};
 use state::State;
 
-use ferrum::{
+use ferrum_hdl::{
     array::Array,
     bit::{Bit, L},
     const_helpers::UsizeConstr,
@@ -60,9 +60,17 @@ where
     .map(|(_, state)| state.to_array())
 }
 
+pub struct TestSystem;
+
+impl ClockDomain for TestSystem {
+    const FREQ: usize = 8;
+}
+
+type System = TestSystem;
+
 #[allow(clippy::let_and_return)]
-pub fn top_module(clk: Clock<ZynqMiniDom>) -> Signal<ZynqMiniDom, Array<4, Bit>> {
+pub fn top_module(clk: Clock<System>) -> Signal<System, Array<4, Bit>> {
     let rst = Reset::reset();
-    let led = leds::<ZynqMiniDom>(clk, rst);
+    let led = leds::<System>(clk, rst);
     led
 }

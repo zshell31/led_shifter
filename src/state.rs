@@ -1,6 +1,8 @@
 use std::fmt::Binary;
 
-use ferrum::{array::Array, bit::Bit, bit_pack::BitPack, signal::SignalValue, unsigned::Unsigned};
+use ferrum_hdl::{
+    array::Array, bit::Bit, bit_pack::BitPack, signal::SignalValue, unsigned::Unsigned,
+};
 
 pub const N: usize = 4;
 pub const CYCLES: usize = 4 * TOTAL + 1;

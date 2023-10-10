@@ -7,4 +7,4 @@ edition = "2021"
 
 [dependencies]
 derive-where = "1.2.5"
-ferrum = { git = "ssh://git@github.com/zshell31/ferrum" }
+ferrum_hdl = { git = "ssh://git@github.com/zshell31/ferrum_hdl" }

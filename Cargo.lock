@@ -61,14 +61,14 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 
 [[package]]
-name = "ferrum"
+name = "ferrum_hdl"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum#ba5f04b30ed41178cc0a78e8aba8b727cb4e8fd8"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
  "derive-where",
  "dyn-clone",
- "ferrum_macros",
- "ferrum_netlist",
+ "fhdl_macros",
+ "fhdl_netlist",
  "fnv",
  "seq-macro",
  "smallvec",
@@ -76,28 +76,28 @@ dependencies = [
 ]
 
 [[package]]
-name = "ferrum_blackbox"
+name = "fhdl_blackbox"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum#ba5f04b30ed41178cc0a78e8aba8b727cb4e8fd8"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
  "strum",
 ]
 
 [[package]]
-name = "ferrum_macros"
+name = "fhdl_macros"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum#ba5f04b30ed41178cc0a78e8aba8b727cb4e8fd8"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
- "ferrum_blackbox",
+ "fhdl_blackbox",
  "proc-macro2",
  "quote",
  "syn",
 ]
 
 [[package]]
-name = "ferrum_netlist"
+name = "fhdl_netlist"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum#ba5f04b30ed41178cc0a78e8aba8b727cb4e8fd8"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
  "auto_enums",
  "bumpalo",
@@ -141,14 +141,14 @@ name = "led_shifter"
 version = "0.1.0"
 dependencies = [
  "derive-where",
- "ferrum",
+ "ferrum_hdl",
 ]
 
 [[package]]
 name = "proc-macro2"
-version = "1.0.68"
+version = "1.0.69"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5b1106fec09662ec6dd98ccac0f81cef56984d0b49f75c92d8cbad76e20c005c"
+checksum = "134c189feb4956b20f6f547d2cf727d4c0fe06722b20a0eec87ed445a97f92da"
 dependencies = [
  "unicode-ident",
 ]

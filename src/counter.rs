@@ -1,4 +1,4 @@
-use ferrum::{
+use ferrum_hdl::{
     bit::{Bit, H, L},
     const_functions::clog2,
     const_helpers::UsizeConstr,

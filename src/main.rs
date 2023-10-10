@@ -1,13 +1,7 @@
-use ferrum::domain::{Clock, ClockDomain};
-use ferrum::signal::{Reset, Signal, SignalValue};
-use ferrum::simulation::{Simulate, Simulation};
-use led_shifter::leds;
-
-pub struct TestSystem;
-
-impl ClockDomain for TestSystem {
-    const FREQ: usize = 8;
-}
+use ferrum_hdl::domain::Clock;
+use ferrum_hdl::signal::{Reset, Signal, SignalValue};
+use ferrum_hdl::simulation::{Simulate, Simulation};
+use led_shifter::{leds, TestSystem};
 
 fn print<T: SignalValue>(sim: &mut Simulation<Signal<TestSystem, T>>) {
     for value in sim.take(40) {
