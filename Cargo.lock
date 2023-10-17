@@ -15,10 +15,51 @@ dependencies = [
 ]
 
 [[package]]
+name = "autocfg"
+version = "1.1.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d468802bab17cbc0cc575e9b053f41e72aa36bfa6b7f55e3529ffa43161b97fa"
+
+[[package]]
 name = "bumpalo"
 version = "3.14.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7f30e7476521f6f8af1a1c4c0b8cc94f0bee37d91763d0ca2665f299b6cd8aec"
+
+[[package]]
+name = "darling"
+version = "0.20.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0209d94da627ab5605dcccf08bb18afa5009cfbef48d8a8b7d7bdbc79be25c5e"
+dependencies = [
+ "darling_core",
+ "darling_macro",
+]
+
+[[package]]
+name = "darling_core"
+version = "0.20.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "177e3443818124b357d8e76f53be906d60937f0d3a90773a664fa63fa253e621"
+dependencies = [
+ "fnv",
+ "ident_case",
+ "proc-macro2",
+ "quote",
+ "strsim",
+ "syn",
+]
+
+[[package]]
+name = "darling_macro"
+version = "0.20.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "836a9bbc7ad63342d6d6e7b815ccab164bc77a2d95d84bc3117a8c0d5c98e2d5"
+dependencies = [
+ "darling_core",
+ "quote",
+ "syn",
+]
 
 [[package]]
 name = "derive-where"
@@ -63,13 +104,16 @@ checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 [[package]]
 name = "ferrum_hdl"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
  "derive-where",
  "dyn-clone",
+ "fhdl_const_func",
  "fhdl_macros",
  "fhdl_netlist",
  "fnv",
+ "num-bigint",
+ "num-traits",
+ "paste",
  "seq-macro",
  "smallvec",
  "strum",
@@ -78,17 +122,22 @@ dependencies = [
 [[package]]
 name = "fhdl_blackbox"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
  "strum",
 ]
 
 [[package]]
+name = "fhdl_const_func"
+version = "0.1.0"
+
+[[package]]
 name = "fhdl_macros"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
+ "darling",
+ "either",
  "fhdl_blackbox",
+ "fhdl_const_func",
  "proc-macro2",
  "quote",
  "syn",
@@ -97,12 +146,13 @@ dependencies = [
 [[package]]
 name = "fhdl_netlist"
 version = "0.1.0"
-source = "git+ssh://git@github.com/zshell31/ferrum_hdl#de56aeb172dc2019d6d72808bcdaa2c5833c685c"
 dependencies = [
  "auto_enums",
  "bumpalo",
  "derive-where",
  "either",
+ "fhdl_blackbox",
+ "fhdl_const_func",
  "fnv",
  "indexmap",
  "smallvec",
@@ -127,6 +177,12 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "95505c38b4572b2d910cecb0281560f54b440a19336cbbcb27bf6ce6adc6f5a8"
 
 [[package]]
+name = "ident_case"
+version = "1.0.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b9e0384b61958566e926dc50660321d12159025e767c18e043daf26b70104c39"
+
+[[package]]
 name = "indexmap"
 version = "2.0.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -143,6 +199,42 @@ dependencies = [
  "derive-where",
  "ferrum_hdl",
 ]
+
+[[package]]
+name = "num-bigint"
+version = "0.4.4"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "608e7659b5c3d7cba262d894801b9ec9d00de989e8a82bd4bef91d08da45cdc0"
+dependencies = [
+ "autocfg",
+ "num-integer",
+ "num-traits",
+]
+
+[[package]]
+name = "num-integer"
+version = "0.1.45"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "225d3389fb3509a24c93f5c29eb6bde2586b98d9f016636dff58d7c6f7569cd9"
+dependencies = [
+ "autocfg",
+ "num-traits",
+]
+
+[[package]]
+name = "num-traits"
+version = "0.2.17"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "39e3200413f237f41ab11ad6d161bc7239c84dcb631773ccd7de3dfe4b5c267c"
+dependencies = [
+ "autocfg",
+]
+
+[[package]]
+name = "paste"
+version = "1.0.14"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "de3145af08024dea9fa9914f381a17b8fc6034dfb00f3a84013f7ff43f29ed4c"
 
 [[package]]
 name = "proc-macro2"
@@ -179,6 +271,12 @@ name = "smallvec"
 version = "1.11.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "942b4a808e05215192e39f4ab80813e599068285906cc91aa64f923db842bd5a"
+
+[[package]]
+name = "strsim"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "73473c0e59e6d5812c5dfe2a064a6444949f089e20eec9a2e5506596494e4623"
 
 [[package]]
 name = "strum"

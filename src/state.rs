@@ -1,17 +1,21 @@
 use std::fmt::Binary;
 
 use ferrum_hdl::{
-    array::Array, bit::Bit, bit_pack::BitPack, signal::SignalValue, unsigned::Unsigned,
+    array::Array,
+    bit::Bit,
+    bitpack::BitPack,
+    signal::SignalValue,
+    unsigned::{u, Unsigned},
 };
 
 pub const N: usize = 4;
 pub const CYCLES: usize = 4 * TOTAL + 1;
 
 const TOTAL: usize = N + N - 1;
-const LEFT: Unsigned<7> = Unsigned::new((1 << N) - 1);
-const RIGHT: Unsigned<7> = Unsigned::new(((1 << N) - 1) << (N - 1));
+const LEFT: u<7> = u((1 << N) - 1);
+const RIGHT: u<7> = u(((1 << N) - 1) << (N - 1));
 
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone)]
 pub enum State {
     Left(Unsigned<TOTAL>),
     Right(Unsigned<TOTAL>),
@@ -30,22 +34,26 @@ impl SignalValue for State {}
 
 impl Default for State {
     fn default() -> Self {
-        State::Left(LEFT)
+        State::Left(LEFT.into())
     }
 }
 
 impl State {
     pub fn change(self) -> State {
         match self {
-            Self::Left(_) => Self::Right(RIGHT),
-            Self::Right(_) => Self::Left(LEFT),
+            Self::Left(_) => Self::Right(RIGHT.into()),
+            Self::Right(_) => Self::Left(LEFT.into()),
         }
     }
 
     pub fn shift(self) -> State {
         match self {
-            Self::Left(left) => Self::Left(if left == 0 { LEFT } else { left << 1 }),
-            Self::Right(right) => Self::Right(if right == 0 { RIGHT } else { right >> 1 }),
+            Self::Left(left) => Self::Left(if left == 0 { LEFT.into() } else { left << 1_u8 }),
+            Self::Right(right) => Self::Right(if right == 0 {
+                RIGHT.into()
+            } else {
+                right >> 1_u8
+            }),
         }
     }
 

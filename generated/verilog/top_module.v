@@ -64,11 +64,11 @@ module leds
 
     reg [1:0] __tmp_16;
     initial begin
-        __tmp_16 = { 1'd0, 1'd0 };
+        __tmp_16 = 2'd0;
     end
     always @(posedge clk or posedge rst) begin
         if (rst)
-            __tmp_16 <= { 1'd0, 1'd0 };
+            __tmp_16 <= 2'd0;
         else
             __tmp_16 <= { __tmp_9, __tmp_10 };
     end
@@ -94,7 +94,7 @@ module leds
         // Inputs
         .self$(__tmp_44[0 +: 8]),
         // Outputs
-        .__tmp_20(__tmp_36)
+        .__tmp_26(__tmp_36)
     );
 
     wire [7:0] __tmp_37;
@@ -102,7 +102,7 @@ module leds
         // Inputs
         .self$(__tmp_44[0 +: 8]),
         // Outputs
-        .__tmp_36(__tmp_37)
+        .__tmp_42(__tmp_37)
     );
 
     wire [7:0] __tmp_38;
@@ -117,11 +117,11 @@ module leds
 
     reg [12:0] __tmp_44;
     initial begin
-        __tmp_44 = { 5'd0, { 1'd0, 7'd15 } };
+        __tmp_44 = 13'd15;
     end
     always @(posedge clk or posedge rst) begin
         if (rst)
-            __tmp_44 <= { 5'd0, { 1'd0, 7'd15 } };
+            __tmp_44 <= 13'd15;
         else if (__tmp_18)
             __tmp_44 <= { __tmp_32, __tmp_38 };
     end
@@ -165,7 +165,7 @@ module Counter$succ
             1'h0: 
                 __tmp_15 = { self$ + 1'd1, 1'd0 };
             default: 
-                __tmp_15 = { 1'd0, 1'd1 };
+                __tmp_15 = 2'd1;
         endcase
     end
 
@@ -213,7 +213,7 @@ module Counter$succ_1
             1'h0: 
                 __tmp_15 = { self$ + 5'd1, 1'd0 };
             default: 
-                __tmp_15 = { 5'd0, 1'd1 };
+                __tmp_15 = 6'd1;
         endcase
     end
 
@@ -243,19 +243,19 @@ module State$change
     // Inputs
     input wire [7:0] self$,
     // Outputs
-    output wire [7:0] __tmp_20
+    output wire [7:0] __tmp_26
 );
 
-    wire [7:0] __tmp_19;
+    wire [7:0] __tmp_25;
     always @(*) begin
         case (self$[7])
-            1'b0 : __tmp_19 = { 1'd1, 7'd120 };
-            default: __tmp_19 = { 1'd0, 7'd15 };
+            1'b0 : __tmp_25 = 8'd248;
+            default: __tmp_25 = 8'd15;
         endcase
     end
 
-    wire [7:0] __tmp_20;
-    assign __tmp_20 = __tmp_19;
+    wire [7:0] __tmp_26;
+    assign __tmp_26 = __tmp_25;
 
 endmodule
 
@@ -264,39 +264,39 @@ module State$shift
     // Inputs
     input wire [7:0] self$,
     // Outputs
-    output wire [7:0] __tmp_36
+    output wire [7:0] __tmp_42
 );
 
-    wire [6:0] __tmp_11;
+    wire [6:0] __tmp_14;
     always @(*) begin
         case (self$[0 +: 7] == 7'd0)
             1'h0: 
-                __tmp_11 = self$[0 +: 7] << 7'd1;
+                __tmp_14 = self$[0 +: 7] << 7'd1;
             default: 
-                __tmp_11 = 7'd15;
+                __tmp_14 = 7'd15;
         endcase
     end
 
-    wire [6:0] __tmp_27;
+    wire [6:0] __tmp_33;
     always @(*) begin
         case (self$[0 +: 7] == 7'd0)
             1'h0: 
-                __tmp_27 = self$[0 +: 7] >> 7'd1;
+                __tmp_33 = self$[0 +: 7] >> 7'd1;
             default: 
-                __tmp_27 = 7'd120;
+                __tmp_33 = 7'd120;
         endcase
     end
 
-    wire [7:0] __tmp_35;
+    wire [7:0] __tmp_41;
     always @(*) begin
         case (self$[7])
-            1'b0 : __tmp_35 = { 1'd0, __tmp_11 };
-            default: __tmp_35 = { 1'd1, __tmp_27 };
+            1'b0 : __tmp_41 = { 1'd0, __tmp_14 };
+            default: __tmp_41 = { 1'd1, __tmp_33 };
         endcase
     end
 
-    wire [7:0] __tmp_36;
-    assign __tmp_36 = __tmp_35;
+    wire [7:0] __tmp_42;
+    assign __tmp_42 = __tmp_41;
 
 endmodule
 

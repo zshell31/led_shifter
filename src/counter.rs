@@ -11,7 +11,7 @@ pub const fn counter(n: usize) -> usize {
     clog2(n)
 }
 
-#[derive(Clone, Copy)]
+#[derive(Clone)]
 pub struct Counter<const N: usize>(Unsigned<{ counter(N) }>)
 where
     UsizeConstr<{ counter(N) }>:;
@@ -65,7 +65,7 @@ where
         let (value, bit) = if self.is_max() {
             (0_u8.into(), H)
         } else {
-            (self.0 + 1, L)
+            (self.0 + 1_u8, L)
         };
         (Self(value), bit)
     }
@@ -74,7 +74,7 @@ where
         let (value, bit) = if self.is_min() {
             ((N as u128).into(), H)
         } else {
-            (self.0 - 1, L)
+            (self.0 - 1_u8, L)
         };
         (Self(value), bit)
     }
