@@ -104,6 +104,7 @@ checksum = "5443807d6dff69373d433ab9ef5378ad8df50ca6298caf15de6e52e24aaf54d5"
 [[package]]
 name = "ferrum_hdl"
 version = "0.1.0"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#3eba20dd9e5a5f253d05b07d28f148b2fdebaa9d"
 dependencies = [
  "derive-where",
  "dyn-clone",
@@ -122,6 +123,7 @@ dependencies = [
 [[package]]
 name = "fhdl_blackbox"
 version = "0.1.0"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#3eba20dd9e5a5f253d05b07d28f148b2fdebaa9d"
 dependencies = [
  "strum",
 ]
@@ -129,10 +131,12 @@ dependencies = [
 [[package]]
 name = "fhdl_const_func"
 version = "0.1.0"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#3eba20dd9e5a5f253d05b07d28f148b2fdebaa9d"
 
 [[package]]
 name = "fhdl_macros"
 version = "0.1.0"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#3eba20dd9e5a5f253d05b07d28f148b2fdebaa9d"
 dependencies = [
  "darling",
  "either",
@@ -146,6 +150,7 @@ dependencies = [
 [[package]]
 name = "fhdl_netlist"
 version = "0.1.0"
+source = "git+ssh://git@github.com/zshell31/ferrum_hdl#3eba20dd9e5a5f253d05b07d28f148b2fdebaa9d"
 dependencies = [
  "auto_enums",
  "bumpalo",

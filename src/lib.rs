@@ -1,4 +1,5 @@
 #![allow(incomplete_features)]
+#![allow(clippy::let_and_return)]
 #![feature(generic_const_exprs)]
 pub mod counter;
 pub mod state;
@@ -68,7 +69,6 @@ impl ClockDomain for TestSystem {
 
 type System = TestSystem;
 
-#[allow(clippy::let_and_return)]
 pub fn top_module(clk: Clock<System>) -> Signal<System, Array<4, Bit>> {
     let rst = Reset::reset();
     let led = leds::<System>(clk, rst);

@@ -54,28 +54,30 @@ where
     }
 
     pub fn is_max(&self) -> bool {
-        self.0 == ((N - 1) as u128)
+        let max = self.0 == ((N - 1) as u128);
+        max
     }
 
     pub fn is_min(&self) -> bool {
-        self.0 == 0
+        let min = self.0 == 0;
+        min
     }
 
     pub fn succ(self) -> (Self, Bit) {
-        let (value, bit) = if self.is_max() {
+        let (value, succ) = if self.is_max() {
             (0_u8.into(), H)
         } else {
             (self.0 + 1_u8, L)
         };
-        (Self(value), bit)
+        (Self(value), succ)
     }
 
     pub fn pred(self) -> (Self, Bit) {
-        let (value, bit) = if self.is_min() {
+        let (value, pred) = if self.is_min() {
             ((N as u128).into(), H)
         } else {
             (self.0 - 1_u8, L)
         };
-        (Self(value), bit)
+        (Self(value), pred)
     }
 }
