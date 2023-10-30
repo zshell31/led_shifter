@@ -5,34 +5,22 @@ module top_module
     // Inputs
     input wire clk,
     // Outputs
-    output wire led0,
-    output wire led1,
-    output wire led2,
-    output wire led3
+    output wire led$0,
+    output wire led$1,
+    output wire led$2,
+    output wire led$3
 );
 
-    wire __out;
-    wire __out_1;
-    wire __out_2;
-    wire __out_3;
     leds __leds (
         // Inputs
         .clk(clk),
         .rst(1'd0),
         // Outputs
-        .__out_2(__out),
-        .__out_3(__out_1),
-        .__out_4(__out_2),
-        .__out_5(__out_3)
+        .out(led$0),
+        .out_1(led$1),
+        .out_2(led$2),
+        .out_3(led$3)
     );
-
-    assign led0 = __out;
-
-    assign led1 = __out_1;
-
-    assign led2 = __out_2;
-
-    assign led3 = __out_3;
 
 endmodule
 
@@ -42,68 +30,32 @@ module leds
     input wire clk,
     input wire rst,
     // Outputs
-    output wire __out_2,
-    output wire __out_3,
-    output wire __out_4,
-    output wire __out_5
+    output wire out,
+    output wire out_1,
+    output wire out_2,
+    output wire out_3
 );
 
-    wire shift_c;
-    wire en;
-    Counter$succ __Counter$succ (
-        // Inputs
-        .self0(dff[1]),
-        // Outputs
-        .value(shift_c),
-        .succ(en)
-    );
-
-    reg [1:0] dff;
+    reg [2:0] dff;
     initial begin
-        dff = 2'd0;
+        dff = 3'd0;
     end
     always @(posedge clk or posedge rst) begin
         if (rst)
-            dff <= 2'd0;
+            dff <= 3'd0;
         else
-            dff <= { shift_c, en };
+            dff <= { shift_c_1, en_1 };
     end
 
-    wire [4:0] counter;
-    wire change;
-    Counter$succ_1 __Counter$succ_1 (
+    wire [1:0] shift_c_1;
+    wire en_1;
+    Counter$succ __Counter$succ (
         // Inputs
-        .self0(dff_en[8 +: 5]),
+        .self$(dff[1 +: 2]),
         // Outputs
-        .value(counter),
-        .succ(change)
+        .value(shift_c_1),
+        .succ(en_1)
     );
-
-    wire [7:0] __out;
-    State$change __State$change (
-        // Inputs
-        .self$(dff_en[0 +: 8]),
-        // Outputs
-        .__out(__out)
-    );
-
-    wire [7:0] __out_1;
-    State$shift __State$shift (
-        // Inputs
-        .self$(dff_en[0 +: 8]),
-        // Outputs
-        .__out(__out_1)
-    );
-
-    wire [7:0] mux2;
-    always @(*) begin
-        case (change)
-            1'h0: 
-                mux2 = __out_1;
-            default: 
-                mux2 = __out;
-        endcase
-    end
 
     reg [12:0] dff_en;
     initial begin
@@ -113,17 +65,53 @@ module leds
         if (rst)
             dff_en <= 13'd15;
         else if (dff[0])
-            dff_en <= { counter, mux2 };
+            dff_en <= { counter_1, state_1 };
+    end
+
+    wire [4:0] counter_1;
+    wire change;
+    Counter$succ_1 __Counter$succ_1 (
+        // Inputs
+        .self$(dff_en[8 +: 5]),
+        // Outputs
+        .value(counter_1),
+        .succ(change)
+    );
+
+    wire [7:0] mux;
+    State$change __State$change (
+        // Inputs
+        .self$(dff_en[0 +: 8]),
+        // Outputs
+        .mux(mux)
+    );
+
+    wire [7:0] mux_1;
+    State$shift __State$shift (
+        // Inputs
+        .self$(dff_en[0 +: 8]),
+        // Outputs
+        .mux_2(mux_1)
+    );
+
+    wire [7:0] state_1;
+    always @(*) begin
+        case (change)
+            1'h0: 
+                state_1 = mux_1;
+            default: 
+                state_1 = mux;
+        endcase
     end
 
     State$to_array __State$to_array (
         // Inputs
         .self$(dff_en[0 +: 8]),
         // Outputs
-        .__out(__out_2),
-        .__out_1(__out_3),
-        .__out_2(__out_4),
-        .__out_3(__out_5)
+        .out(out),
+        .out_1(out_1),
+        .out_2(out_2),
+        .out_3(out_3)
     );
 
 endmodule
@@ -131,90 +119,50 @@ endmodule
 module Counter$succ
 (
     // Inputs
-    input wire self0,
+    input wire [1:0] self$,
     // Outputs
-    output wire value,
+    output wire [1:0] value,
     output wire succ
 );
 
-    wire max;
-    Counter$is_max __Counter$is_max (
-        // Inputs
-        .self0(self0),
-        // Outputs
-        .max(max)
-    );
-
-    wire [1:0] mux2;
+    wire [2:0] mux;
     always @(*) begin
-        case (max)
+        case (self$ == 2'd1)
             1'h0: 
-                mux2 = { self0 + 1'd1, 1'd0 };
+                mux = { self$ + 2'd1, 1'd0 };
             default: 
-                mux2 = 2'd1;
+                mux = 3'd1;
         endcase
     end
 
-    assign value = mux2[1];
+    assign value = mux[1 +: 2];
 
-    assign succ = mux2[0];
-
-endmodule
-
-module Counter$is_max
-(
-    // Inputs
-    input wire self0,
-    // Outputs
-    output wire max
-);
-
-    assign max = self0 == 1'd0;
+    assign succ = mux[0];
 
 endmodule
 
 module Counter$succ_1
 (
     // Inputs
-    input wire [4:0] self0,
+    input wire [4:0] self$,
     // Outputs
     output wire [4:0] value,
     output wire succ
 );
 
-    wire max;
-    Counter$is_max_1 __Counter$is_max (
-        // Inputs
-        .self0(self0),
-        // Outputs
-        .max(max)
-    );
-
-    wire [5:0] mux2;
+    wire [5:0] mux;
     always @(*) begin
-        case (max)
+        case (self$ == 5'd15)
             1'h0: 
-                mux2 = { self0 + 5'd1, 1'd0 };
+                mux = { self$ + 5'd1, 1'd0 };
             default: 
-                mux2 = 6'd1;
+                mux = 6'd1;
         endcase
     end
 
-    assign value = mux2[1 +: 5];
+    assign value = mux[1 +: 5];
 
-    assign succ = mux2[0];
-
-endmodule
-
-module Counter$is_max_1
-(
-    // Inputs
-    input wire [4:0] self0,
-    // Outputs
-    output wire max
-);
-
-    assign max = self0 == 5'd28;
+    assign succ = mux[0];
 
 endmodule
 
@@ -223,18 +171,15 @@ module State$change
     // Inputs
     input wire [7:0] self$,
     // Outputs
-    output wire [7:0] __out
+    output wire [7:0] mux
 );
 
-    wire [7:0] mux;
     always @(*) begin
         case (self$[7])
             1'b0 : mux = 8'd248;
             default: mux = 8'd15;
         endcase
     end
-
-    assign __out = mux;
 
 endmodule
 
@@ -243,38 +188,35 @@ module State$shift
     // Inputs
     input wire [7:0] self$,
     // Outputs
-    output wire [7:0] __out
+    output wire [7:0] mux_2
 );
 
-    wire [6:0] mux2;
+    wire [6:0] mux;
     always @(*) begin
         case (self$[0 +: 7] == 7'd0)
             1'h0: 
-                mux2 = self$[0 +: 7] << 7'd1;
+                mux = self$[0 +: 7] << 7'd1;
             default: 
-                mux2 = 7'd15;
+                mux = 7'd15;
         endcase
     end
 
-    wire [6:0] mux2_1;
+    wire [6:0] mux_1;
     always @(*) begin
         case (self$[0 +: 7] == 7'd0)
             1'h0: 
-                mux2_1 = self$[0 +: 7] >> 7'd1;
+                mux_1 = self$[0 +: 7] >> 7'd1;
             default: 
-                mux2_1 = 7'd120;
+                mux_1 = 7'd120;
         endcase
     end
 
-    wire [7:0] mux;
     always @(*) begin
         case (self$[7])
-            1'b0 : mux = { 1'd0, { mux2 } };
-            default: mux = { 1'd1, { mux2_1 } };
+            1'b0 : mux_2 = { 1'd0, mux };
+            default: mux_2 = { 1'd1, mux_1 };
         endcase
     end
-
-    assign __out = mux;
 
 endmodule
 
@@ -283,39 +225,39 @@ module State$to_array
     // Inputs
     input wire [7:0] self$,
     // Outputs
-    output wire __out,
-    output wire __out_1,
-    output wire __out_2,
-    output wire __out_3
+    output wire out,
+    output wire out_1,
+    output wire out_2,
+    output wire out_3
 );
 
     wire [6:0] left;
     assign left = self$[0 +: 7];
 
-    wire [3:0] __tmp;
-    assign __tmp = left[3 +: 4];
+    wire [3:0] left_slice;
+    assign left_slice = left[3 +: 4];
 
     wire [6:0] right;
     assign right = self$[0 +: 7];
 
-    wire [3:0] __tmp_6;
-    assign __tmp_6 = right[0 +: 4];
+    wire [3:0] right_slice;
+    assign right_slice = right[0 +: 4];
 
     wire [3:0] mux;
     always @(*) begin
         case (self$[7])
-            1'b0 : mux = { __tmp[3], __tmp[2], __tmp[1], __tmp[0] };
-            default: mux = { __tmp_6[3], __tmp_6[2], __tmp_6[1], __tmp_6[0] };
+            1'b0 : mux = { left_slice[3], left_slice[2], left_slice[1], left_slice[0] };
+            default: mux = { right_slice[3], right_slice[2], right_slice[1], right_slice[0] };
         endcase
     end
 
-    assign __out = mux[3];
+    assign out = mux[3];
 
-    assign __out_1 = mux[2];
+    assign out_1 = mux[2];
 
-    assign __out_2 = mux[1];
+    assign out_2 = mux[1];
 
-    assign __out_3 = mux[0];
+    assign out_3 = mux[0];
 
 endmodule
 

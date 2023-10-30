@@ -9,7 +9,7 @@ use ferrum_hdl::{
 };
 
 pub const N: usize = 4;
-pub const CYCLES: usize = 4 * TOTAL + 1;
+pub const CYCLES: usize = 2 * (TOTAL + 1);
 
 const TOTAL: usize = N + N - 1;
 const LEFT: u<7> = u((1 << N) - 1);

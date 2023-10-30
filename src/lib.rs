@@ -21,7 +21,7 @@ impl ClockDomain for ZynqMiniDom {
     const FREQ: usize = 50_000_000;
 }
 
-pub const FREQ: usize = 8;
+pub const FREQ: usize = 4;
 
 pub const fn counter_period<D: ClockDomain>(freq: usize) -> usize {
     D::FREQ / freq

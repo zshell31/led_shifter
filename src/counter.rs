@@ -49,15 +49,18 @@ impl<const N: usize> Counter<N>
 where
     UsizeConstr<{ counter(N) }>:,
 {
+    #[inline]
     pub fn new() -> Self {
         Self(0_u8.into())
     }
 
+    #[inline]
     pub fn is_max(&self) -> bool {
-        let max = self.0 == ((N - 1) as u128);
+        let max = self.0 == Unsigned::from(N - 1);
         max
     }
 
+    #[inline]
     pub fn is_min(&self) -> bool {
         let min = self.0 == 0;
         min
