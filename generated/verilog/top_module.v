@@ -40,6 +40,8 @@ module leds
     initial begin
         dff = 3'd0;
     end
+    wire [1:0] shift_c_1;
+    wire en_1;
     always @(posedge clk or posedge rst) begin
         if (rst)
             dff <= 3'd0;
@@ -47,8 +49,6 @@ module leds
             dff <= { shift_c_1, en_1 };
     end
 
-    wire [1:0] shift_c_1;
-    wire en_1;
     Counter$succ __Counter$succ (
         // Inputs
         .self$(dff[1 +: 2]),
@@ -61,6 +61,8 @@ module leds
     initial begin
         dff_en = 13'd15;
     end
+    wire [4:0] counter_1;
+    wire [7:0] state_1;
     always @(posedge clk or posedge rst) begin
         if (rst)
             dff_en <= 13'd15;
@@ -68,7 +70,6 @@ module leds
             dff_en <= { counter_1, state_1 };
     end
 
-    wire [4:0] counter_1;
     wire change;
     Counter$succ_1 __Counter$succ_1 (
         // Inputs
@@ -94,13 +95,12 @@ module leds
         .mux_2(mux_1)
     );
 
-    wire [7:0] state_1;
     always @(*) begin
         case (change)
-            1'h0: 
-                state_1 = mux_1;
-            default: 
+            1'h1:
                 state_1 = mux;
+            default:
+                state_1 = mux_1;
         endcase
     end
 
@@ -128,10 +128,10 @@ module Counter$succ
     wire [2:0] mux;
     always @(*) begin
         case (self$ == 2'd1)
-            1'h0: 
-                mux = { self$ + 2'd1, 1'd0 };
-            default: 
+            1'h1:
                 mux = 3'd1;
+            default:
+                mux = { self$ + 2'd1, 1'd0 };
         endcase
     end
 
@@ -153,10 +153,10 @@ module Counter$succ_1
     wire [5:0] mux;
     always @(*) begin
         case (self$ == 5'd15)
-            1'h0: 
-                mux = { self$ + 5'd1, 1'd0 };
-            default: 
+            1'h1:
                 mux = 6'd1;
+            default:
+                mux = { self$ + 5'd1, 1'd0 };
         endcase
     end
 
@@ -175,8 +175,8 @@ module State$change
 );
 
     always @(*) begin
-        case (self$[7])
-            1'b0 : mux = 8'd248;
+        casez (self$)
+            8'b0??????? : mux = 8'd248;
             default: mux = 8'd15;
         endcase
     end
@@ -194,26 +194,26 @@ module State$shift
     wire [6:0] mux;
     always @(*) begin
         case (self$[0 +: 7] == 7'd0)
-            1'h0: 
-                mux = self$[0 +: 7] << 7'd1;
-            default: 
+            1'h1:
                 mux = 7'd15;
+            default:
+                mux = self$[0 +: 7] << 7'd1;
         endcase
     end
 
     wire [6:0] mux_1;
     always @(*) begin
         case (self$[0 +: 7] == 7'd0)
-            1'h0: 
-                mux_1 = self$[0 +: 7] >> 7'd1;
-            default: 
+            1'h1:
                 mux_1 = 7'd120;
+            default:
+                mux_1 = self$[0 +: 7] >> 7'd1;
         endcase
     end
 
     always @(*) begin
-        case (self$[7])
-            1'b0 : mux_2 = { 1'd0, mux };
+        casez (self$)
+            8'b0??????? : mux_2 = { 1'd0, mux };
             default: mux_2 = { 1'd1, mux_1 };
         endcase
     end
@@ -245,8 +245,8 @@ module State$to_array
 
     wire [3:0] mux;
     always @(*) begin
-        case (self$[7])
-            1'b0 : mux = { left_slice[3], left_slice[2], left_slice[1], left_slice[0] };
+        casez (self$)
+            8'b0??????? : mux = { left_slice[3], left_slice[2], left_slice[1], left_slice[0] };
             default: mux = { right_slice[3], right_slice[2], right_slice[1], right_slice[0] };
         endcase
     end
