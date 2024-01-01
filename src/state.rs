@@ -4,6 +4,7 @@ use ferrum_hdl::{
     array::Array,
     bit::Bit,
     bitpack::BitPack,
+    cast::Cast,
     signal::SignalValue,
     unsigned::{u, Unsigned},
 };
@@ -34,26 +35,22 @@ impl SignalValue for State {}
 
 impl Default for State {
     fn default() -> Self {
-        State::Left(LEFT.into())
+        State::Left(LEFT.cast())
     }
 }
 
 impl State {
     pub fn change(self) -> State {
         match self {
-            Self::Left(_) => Self::Right(RIGHT.into()),
-            Self::Right(_) => Self::Left(LEFT.into()),
+            Self::Left(_) => Self::Right(RIGHT.cast()),
+            Self::Right(_) => Self::Left(LEFT.cast()),
         }
     }
 
     pub fn shift(self) -> State {
         match self {
-            Self::Left(left) => Self::Left(if left == 0 { LEFT.into() } else { left << 1_u8 }),
-            Self::Right(right) => Self::Right(if right == 0 {
-                RIGHT.into()
-            } else {
-                right >> 1_u8
-            }),
+            Self::Left(left) => Self::Left(if left == 0 { LEFT.cast() } else { left << 1 }),
+            Self::Right(right) => Self::Right(if right == 0 { RIGHT.cast() } else { right >> 1 }),
         }
     }
 
