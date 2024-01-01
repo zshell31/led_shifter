@@ -13,6 +13,6 @@ fn main() {
     let clk = Clock::default();
     let rst = Reset::reset();
 
-    let mut sim = leds::<TestSystem>(clk, rst).simulate();
+    let mut sim = leds::<TestSystem>(clk, &rst).simulate();
     print(&mut sim);
 }

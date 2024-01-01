@@ -10,7 +10,7 @@ use state::State;
 use ferrum_hdl::{
     array::Array,
     bit::{Bit, L},
-    const_helpers::UsizeConstr,
+    cast::Cast,
     domain::{Clock, ClockDomain},
     signal::{reg, reg_en, Reset, Signal},
 };
@@ -31,25 +31,25 @@ pub const fn counter_period<D: ClockDomain>(freq: usize) -> usize {
 pub type ShiftC<D: ClockDomain> = Counter<{ counter_period::<D>(FREQ) }>;
 pub type StateC = Counter<{ state::CYCLES }>;
 
-pub fn leds<D: ClockDomain>(clk: Clock<D>, rst: Reset<D>) -> Signal<D, Array<{ state::N }, Bit>>
+pub fn leds<D: ClockDomain>(clk: Clock<D>, rst: &Reset<D>) -> Signal<D, Array<{ state::N }, Bit>>
 where
-    UsizeConstr<{ counter(counter_period::<D>(FREQ)) }>:,
+    [(); counter(counter_period::<D>(FREQ))]:,
 {
-    let en = reg(clk, rst.clone(), (ShiftC::<D>::new(), L), |(shift_c, _)| {
+    let en = reg(clk, rst, &(ShiftC::<D>::new(), L), |(shift_c, _)| {
         let (shift_c, en) = shift_c.succ();
         (shift_c, en)
     })
-    .map(|(_, en)| en);
+    .map(|(_, en)| en.cast::<bool>());
 
     reg_en(
         clk,
-        rst.clone(),
-        en,
-        (StateC::new(), State::default()),
+        rst,
+        &en,
+        &(StateC::new(), State::default()),
         |(counter, state)| {
             let (counter, change) = counter.succ();
 
-            let state = if change.into() {
+            let state = if change.cast() {
                 state.change()
             } else {
                 state.shift()
@@ -71,6 +71,6 @@ type System = TestSystem;
 
 pub fn top_module(clk: Clock<System>) -> Signal<System, Array<4, Bit>> {
     let rst = Reset::reset();
-    let led = leds::<System>(clk, rst);
+    let led = leds::<System>(clk, &rst);
     led
 }
