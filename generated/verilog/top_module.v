@@ -16,10 +16,10 @@ module top_module
         .clk(clk),
         .rst(1'd0),
         // Outputs
-        .out(led$0),
-        .out_1(led$1),
-        .out_2(led$2),
-        .out_3(led$3)
+        .out$0(led$0),
+        .out$1(led$1),
+        .out$2(led$2),
+        .out$3(led$3)
     );
 
 endmodule
@@ -30,10 +30,10 @@ module leds
     input wire clk,
     input wire rst,
     // Outputs
-    output wire out,
-    output wire out_1,
-    output wire out_2,
-    output wire out_3
+    output wire out$0,
+    output wire out$1,
+    output wire out$2,
+    output wire out$3
 );
 
     reg [2:0] dff;
@@ -121,10 +121,10 @@ module leds
         // Inputs
         .self$(dff_en[0 +: 8]),
         // Outputs
-        .out(out),
-        .out_1(out_1),
-        .out_2(out_2),
-        .out_3(out_3)
+        .out$0(out$0),
+        .out$1(out$1),
+        .out$2(out$2),
+        .out$3(out$3)
     );
 
 endmodule
@@ -230,10 +230,10 @@ module state_State_to_array
     // Inputs
     input wire [7:0] self$,
     // Outputs
-    output wire out,
-    output wire out_1,
-    output wire out_2,
-    output wire out_3
+    output wire out$0,
+    output wire out$1,
+    output wire out$2,
+    output wire out$3
 );
 
     wire [6:0] left;
@@ -256,13 +256,13 @@ module state_State_to_array
         endcase
     end
 
-    assign out = mux[3];
+    assign out$0 = mux[3];
 
-    assign out_1 = mux[2];
+    assign out$1 = mux[2];
 
-    assign out_2 = mux[1];
+    assign out$2 = mux[1];
 
-    assign out_3 = mux[0];
+    assign out$3 = mux[0];
 
 endmodule
 
