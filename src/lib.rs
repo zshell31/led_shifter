@@ -1,45 +1,30 @@
 #![allow(incomplete_features)]
 #![allow(clippy::let_and_return)]
 #![feature(generic_const_exprs)]
-pub mod counter;
 pub mod state;
 
-use counter::{counter, Counter};
 use state::State;
 
-use ferrum_hdl::{
-    array::Array,
-    bit::{Bit, L},
-    cast::Cast,
-    domain::{Clock, ClockDomain},
-    signal::{reg, reg_en, Reset, Signal},
-};
+use ferrum_hdl::prelude::*;
+use ferrum_hdl::rise_rate_constr;
 
 pub struct ZynqMiniDom;
 
 impl ClockDomain for ZynqMiniDom {
     const FREQ: usize = 50_000_000;
+    const RESET_KIND: SyncKind = SyncKind::Sync;
+    const RESET_POLARITY: Polarity = Polarity::ActiveLow;
 }
 
-pub const FREQ: usize = 4;
+pub const RATE: usize = 4;
 
-pub const fn counter_period<D: ClockDomain>(freq: usize) -> usize {
-    D::FREQ / freq
-}
+pub type StateC = Idx<{ state::CYCLES }>;
 
-#[allow(type_alias_bounds)]
-pub type ShiftC<D: ClockDomain> = Counter<{ counter_period::<D>(FREQ) }>;
-pub type StateC = Counter<{ state::CYCLES }>;
-
-pub fn leds<D: ClockDomain>(clk: Clock<D>, rst: &Reset<D>) -> Signal<D, Array<{ state::N }, Bit>>
+pub fn leds<D: ClockDomain>(clk: &Clock<D>, rst: &Reset<D>) -> Signal<D, Array<{ state::N }, Bit>>
 where
-    [(); counter(counter_period::<D>(FREQ))]:,
+    ConstConstr<{ rise_rate_constr!(D, RATE) }>:,
 {
-    let en = reg(clk, rst, &(ShiftC::<D>::new(), L), |(shift_c, _)| {
-        let (shift_c, en) = shift_c.succ();
-        (shift_c, en)
-    })
-    .map(|(_, en)| en.cast::<bool>());
+    let en = rise_rate::<D, RATE>(clk, rst);
 
     reg_en(
         clk,
@@ -47,9 +32,10 @@ where
         &en,
         &(StateC::new(), State::default()),
         |(counter, state)| {
-            let (counter, change) = counter.succ();
+            let counter = counter.succ();
+            let change = counter.is_zero();
 
-            let state = if change.cast() {
+            let state = if change {
                 state.change()
             } else {
                 state.shift()
@@ -65,12 +51,13 @@ pub struct TestSystem;
 
 impl ClockDomain for TestSystem {
     const FREQ: usize = 8;
+    const RESET_KIND: SyncKind = SyncKind::Sync;
+    const RESET_POLARITY: Polarity = Polarity::ActiveLow;
 }
 
 type System = TestSystem;
 
-pub fn top_module(clk: Clock<System>) -> Signal<System, Array<4, Bit>> {
-    let rst = Reset::reset();
+pub fn top(clk: &Clock<System>, rst: &Reset<System>) -> Signal<System, Array<4, Bit>> {
     let led = leds::<System>(clk, &rst);
     led
 }
